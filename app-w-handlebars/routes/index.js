@@ -3,16 +3,17 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Doing Stuff', condition: false, anyArray: [1, 2, 3] });
+  res.render('index', { title: 'Form Validation', success: false, errors: req.session.errors});
+  req.session.errors = null;
 });
 
-router.get('/test/:id', function(req, res, next) {
-  res.render('test', {output: req.params.id});
+router.post('/submit', function(req, res, next) {
+  // Check validity
+  req.check('email', 'invalid email entered').isEmail();
+  req.check('password', 'invalid password').isLength({min: 4}).equals(req.body.confirmPassword);
+
+  var errors = req.validationErrors();
 });
 
-router.post('test/submit', function(req, res, next) {
-  var id = req.body.id;
-  res.redirect('/test/' + id);
-});
 
 module.exports = router;
