@@ -13,6 +13,10 @@ router.post('/submit', function(req, res, next) {
   req.check('password', 'invalid password').isLength({min: 4}).equals(req.body.confirmPassword);
 
   var errors = req.validationErrors();
+  if (errors) {
+    req.session.errors = errors;
+  }
+  res.redirect('/');
 });
 
 
